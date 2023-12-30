@@ -1,5 +1,17 @@
 public class Memory {
-    // manage process and memory usage with this class
+
+    private int maxMemoryForUsersTasks = 960;
+    private int maxMemoryForRealtimeTasks = 64;
+
+    // maxMemoryForUsersTasks için get fonksiyonu
+    public int getMaxMemoryForUsersTasks() {
+        return maxMemoryForUsersTasks;
+    }
+
+    // maxMemoryForRealtimeTasks için get fonksiyonu
+    public int getMaxMemoryForRealtimeTasks() {
+        return maxMemoryForRealtimeTasks;
+    }
     public int memory_sizeForRealTimeTasks=64;
     public static int memory_sizeForUserTasks=960;
     private int process_id;
@@ -40,3 +52,4 @@ public class Memory {
 
 
 }
+
