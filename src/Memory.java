@@ -1,7 +1,7 @@
 public class Memory {
     // manage process and memory usage with this class
-    private int memory_sizeForRealTimeTasks=64;
-    private int memory_sizeForUserTasks=960;
+    public int memory_sizeForRealTimeTasks=64;
+    public static int memory_sizeForUserTasks=960;
     private int process_id;
     private boolean isAlreadyAllocated=false;
 
@@ -12,6 +12,7 @@ public class Memory {
     public int getMemory_sizeForRealTimeTasks() {
         return memory_sizeForRealTimeTasks;
     }
+
 
     public void allocateMemoryForRealTimeTasks(int memory_sizeForRealTimeTasks) {
         this.memory_sizeForRealTimeTasks -= memory_sizeForRealTimeTasks;
