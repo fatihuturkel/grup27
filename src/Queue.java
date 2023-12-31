@@ -268,6 +268,8 @@ public class Queue {
                         continue;
                     }
                 }
+                Color.setColor(this.realtimequeue.get(i).color);
+                PrintProcess(this.realtimequeue.get(i));
                 this.realtimequeue.get(i).remain_time = this.realtimequeue.get(i).remain_time -1;
 
                 // age of process is increased
@@ -315,6 +317,8 @@ public class Queue {
                             continue;
                         }
                     }
+                    Color.setColor(this.userqueue_one.get(j).color);
+                    PrintProcess(this.userqueue_one.get(j));
                     //Tüm prosesleri günceller ve eğer öncelik değişmesi gerekiyorsa öncelik değiştirir.Süresini bir azaltır.
                     UpdateAllProcess(this.userqueue_one.get(j));
                     control = 1;
@@ -346,6 +350,8 @@ public class Queue {
                             continue;
                         }
                     }
+                    Color.setColor(this.userqueue_two.get(k).color);
+                    PrintProcess(userqueue_two.get(k));
                     //Tüm prosesleri günceller ve eğer öncelik değişmesi gerekiyorsa öncelik değiştirir.Süresini bir azaltır.
                     UpdateAllProcess(this.userqueue_two.get(k));
                     control = 1;
@@ -377,6 +383,8 @@ public class Queue {
                             continue;
                         }
                     }
+                    Color.setColor(this.userqueue_three.get(l).color);
+                    PrintProcess(this.userqueue_three.get(l));
                     //Tüm prosesleri günceller.Süresini bir azaltır.
                     UpdateAllProcess(this.userqueue_three.get(l));
                     control = 1;
@@ -452,6 +460,77 @@ public class Queue {
                 this.processes.remove(i);
             }
         }
+    }
+
+    public void PrintProcess(Process process){
+        //Kontrol 0 ise print timea şu anki zamanı ata.
+        if(getControl()==0){
+            setPrint_time(getTime());
+        }
+        //Proses bilgilerini alır
+        int id = process.id;
+        int priority = process.priority;
+        int remain_time = process.remain_time;
+        String color = process.color;
+        //end
+        //is process expired?
+
+        // Kesme var mı?
+        if(this.prev_remain_time-1>0 && this.prev_id != id){
+            Color.setColor(getPrev_color());
+            System.out.println(getPrint_time()+" sn "+"proses askida (id:"+this.prev_id+" oncelik:"+(this.prev_priority+1)+" kalan sure:"+remain_time+")");
+            //Expired proses olarak ata.
+
+            //set expired process
+            setExpired_color(this.prev_color);
+
+            setExpired_id(this.prev_id);
+            setExpired_priority(this.prev_priority+1);
+            setExpired_remain_time(remain_time);
+            setExpired_time(getPrint_time());
+        }
+        // Proses başladı mı?
+        if(getControl_id()!= id){
+
+
+            Color.setColor(process.color);
+            System.out.println(getPrint_time()+" sn "+"proses basladi (id:"+id+" oncelik:"+priority+" kalan sure:"+remain_time+")");
+
+            setPrint_time(getPrint_time()+1);
+        }
+        //Proses devam ediyor.
+        if(getControl_id()==id){
+
+
+
+            Color.setColor(process.color);
+            System.out.println(getPrint_time()+" sn "+"proses yurutuluyor (id:"+id+" oncelik:"+priority+" kalan sure:"+remain_time+")");
+
+            setPrint_time(getPrint_time()+1);
+        }
+        //Proses zaman aşımı
+        if(getPrint_time()-getExpired_time()==21){
+            Color.setColor(getExpired_color());
+            System.out.println(getPrint_time()+" sn "+"proses zaman asimi (id:"+getExpired_id()+" oncelik:"+getExpired_priority()+" kalan sure:"+getExpired_remain_time()+")");
+
+            findAndDelete(getExpired_id(),getExpired_priority());
+        }
+        //Proses bitti.
+        if(remain_time-1 ==0){
+
+            Color.setColor(process.color);
+            System.out.println(getPrint_time()+" sn "+"proses sonlandi (id:"+id+" oncelik:"+priority+" kalan sure:"+(remain_time-1)+")" );
+
+
+        }
+
+        //Prosesi önceki proses yap.
+        setPrev_id(id);
+        setPrev_color(color);
+        setPrev_remain_time(remain_time);
+        setPrev_priority(priority);
+        setControl_id(id);
+        setControl(1);
     }
 
     //Böyle bir proses olup olmadığını tarar ve bool bir değer döndürür.

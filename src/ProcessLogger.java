@@ -29,12 +29,12 @@ public class ProcessLogger {
 
     public static void printProcessTable() {
         System.out.println("Process Table:");
-        System.out.println("ID\t\tArrival Time\t\tPriority\t\tPrinter\t\t\tScanner\t\t\tModem\t\tCD\t\tProcess State\t\tMemory Size");
+        System.out.println("ID\t\tArrival Time\t\tPriority\t\tPrinter\t\t  Scanner\t\t\t\tModem\t\t\tCD\t\t\tProcess State\t\tMemory Size");
         for (ProcessInfo processFromList : processes) {
             if (processFromList.error == true) {
-                System.out.println(processFromList.process.getId() + "\t\t" +processFromList.errorMessage);}
+                System.out.println(processFromList.process.getId() + "\t\t\t\t" +processFromList.errorMessage);}
             else
-                System.out.println(processFromList.process.getId() + "\t\t" + processFromList.process.arrival_time + "\t\t\t" + processFromList.process.priority + processFromList.process.color + "\t\t\t" + processFromList.process.printer + "\t\t\t" + processFromList.process.scanner + "\t\t\t" + processFromList.process.modem + "\t\t" + processFromList.process.cd+ "\t\t" + processFromList.process.process_state+ "\t\t\t" + processFromList.process.memory_size);
+                System.out.println(processFromList.process.getId() + "\t\t\t\t" + processFromList.process.arrival_time + "\t\t\t\t" + processFromList.process.priority + processFromList.process.color + "\t\t\t\t" + processFromList.process.printer + "\t\t\t\t" + processFromList.process.scanner + "\t\t\t\t" + processFromList.process.modem + "\t\t\t\t" + processFromList.process.cd+ "\t\t\t\t" + processFromList.process.process_state+ "\t\t\t\t" + processFromList.process.memory_size);
             //System.out.println(processFromList.process.getId() + "\t\t\t\t" + processFromList.arrival_time + "\t\t\t\t" + processFromList.priority + processFromList.color + "\t\t\t\t" + processFromList.printer + "\t\t\t\t" + processFromList.scanner + "\t\t\t\t" + processFromList.modem + "\t\t\t\t" + processFromList.cd+ "\t\t\t\t" + processFromList.process_state+ "\t\t\t\t" + processFromList.memory_size);
         }
     }
