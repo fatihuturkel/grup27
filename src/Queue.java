@@ -192,12 +192,17 @@ public class Queue {
 
     //Prosesler ArrayListine yeni proses ekler.
     public void AddProcessToJob(Process process){
-    	// Eğer işlem talep ettiği bellek boyutu toplam kullanılabilir bellekten fazlaysa, işlemi reddet
-        if (process.memory_size > this.remaningMemoryForUser) {
-            System.out.println("HATA - İşlem çok fazla bellek talep ediyor: " + process.id);
-        } else {
-            this.processes.add(process);
+    	// if process is realtime and use memory more than 64, it will not be added to queue
+        if(process.priority == 0 && process.memory_size > 64){
+            System.out.println("HATA - Gerçek-zamanlı proses 64MB'tan daha fazla bellek talep ediyor proses silindi."+""+"Process id: "+process.id);
+            return;
         }
+        // if process is user and use memory more than 960, it will not be added to queue
+        else if(process.priority != 0 && process.memory_size > 960){
+            System.out.println("HATA - Kullanıcı prosesi 960MB'tan daha fazla bellek talep ediyor proses silindi."+""+"Process id: "+process.id);
+            return;
+        }
+        else{this.processes.add(process);}
     }
 
     public void SplitQueue(){
