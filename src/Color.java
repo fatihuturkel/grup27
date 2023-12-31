@@ -12,7 +12,7 @@ public class Color {
             red = random.nextInt(256);
             green = random.nextInt(256);
             blue = random.nextInt(256);
-        } while (red + green + blue < 150); // make sure the color is not too dark for readability purposes :)
+        } while (red + green + blue < 200); // make sure the color is not too dark for readability purposes :)
         return "\033[38;2;" + red + ";" + green + ";" + blue + "m";
     }
 

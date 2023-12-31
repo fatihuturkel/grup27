@@ -257,7 +257,7 @@ public class Queue {
             //Control 0 ise ve prosesin ulaşma zamanı zamandan küçükse ve kalan zamanı 0dan büyükse ekrana yazdır.
             //prosesin kalan süresini 1 azalt.
             //Control değerini 1 yap.
-            if(realtimequeue.get(i).arrival_time <= this.getTime() && this.realtimequeue.get(i).remain_time>0 && control==0 && this.realtimequeue.get(i).process_age<20){
+            if(realtimequeue.get(i).arrival_time <= this.getTime() && this.realtimequeue.get(i).remain_time>0 && control==0 && this.realtimequeue.get(i).process_age<20 && (realtimequeue.get(i).arrival_time+20)>this.getTime()){
                 // check if resources already allocated for this process
                 if(realtimequeue.get(i).isResourcesAllocated()==false){
                     // check if there is a enough memory
@@ -278,6 +278,8 @@ public class Queue {
                         continue;
                     }
                 }
+                Color.setColor(this.realtimequeue.get(i).color);
+                PrintProcess(this.realtimequeue.get(i));
                 this.realtimequeue.get(i).remain_time = this.realtimequeue.get(i).remain_time -1;
 
                 // age of process is increased
@@ -306,7 +308,7 @@ public class Queue {
                 //Prosesin ulaşma zamanı zamandan küçükse ve kalan zamanı 0dan büyükse ekrana yazdır.
 
                 //Control değerini 1 yap.
-                if(userqueue_one.get(j).arrival_time <= this.getTime() && this.userqueue_one.get(j).remain_time>0 && control==0 && this.userqueue_one.get(j).process_age<20){
+                if(userqueue_one.get(j).arrival_time <= this.getTime() && this.userqueue_one.get(j).remain_time>0 && control==0 && this.userqueue_one.get(j).process_age<20 && (userqueue_one.get(j).arrival_time+20)>this.getTime()){
                     // check if resources already allocated for this process
                     if(userqueue_one.get(j).isResourcesAllocated()==false){
                         // check if there is enough memory, printer, scanner, modem, cd even if 1 of them is not enough, process will not be run
@@ -325,6 +327,8 @@ public class Queue {
                             continue;
                         }
                     }
+                    Color.setColor(this.userqueue_one.get(j).color);
+                    PrintProcess(this.userqueue_one.get(j));
                     //Tüm prosesleri günceller ve eğer öncelik değişmesi gerekiyorsa öncelik değiştirir.Süresini bir azaltır.
                     UpdateAllProcess(this.userqueue_one.get(j));
                     control = 1;
@@ -337,7 +341,7 @@ public class Queue {
             for(int k=0;k<this.userqueue_two.size();k++){
                 //Prosesin ulaşma zamanı zamandan küçükse ve kalan zamanı 0dan büyükse ekrana yazdır.
                 //Control değerini 1 yap.
-                if(userqueue_two.get(k).arrival_time <= this.getTime() && this.userqueue_two.get(k).remain_time>0 && control==0&& this.userqueue_two.get(k).process_age<20){
+                if(userqueue_two.get(k).arrival_time <= this.getTime() && this.userqueue_two.get(k).remain_time>0 && control==0&& this.userqueue_two.get(k).process_age<20 && (userqueue_two.get(k).arrival_time+20)>this.getTime()){
                     // check if resources already allocated for this process
                     if(userqueue_two.get(k).isResourcesAllocated()==false){
                         // check if there is enough memory, printer, scanner, modem, cd even if 1 of them is not enough, process will not be run
@@ -356,6 +360,8 @@ public class Queue {
                             continue;
                         }
                     }
+                    Color.setColor(this.userqueue_two.get(k).color);
+                    PrintProcess(userqueue_two.get(k));
                     //Tüm prosesleri günceller ve eğer öncelik değişmesi gerekiyorsa öncelik değiştirir.Süresini bir azaltır.
                     UpdateAllProcess(this.userqueue_two.get(k));
                     control = 1;
@@ -368,7 +374,7 @@ public class Queue {
             for(int l=0;l<this.userqueue_three.size();l++){
                 //Prosesin ulaşma zamanı zamandan küçükse ve kalan zamanı 0dan büyükse ekrana yazdır.
                 //Control değerini 1 yap.
-                if(userqueue_three.get(l).arrival_time <= this.getTime() && this.userqueue_three.get(l).remain_time>0 && control==0 && this.userqueue_three.get(l).process_age<20){
+                if(userqueue_three.get(l).arrival_time <= this.getTime() && this.userqueue_three.get(l).remain_time>0 && control==0 && this.userqueue_three.get(l).process_age<20 && (userqueue_three.get(l).arrival_time+20)>this.getTime()){
                     // check if resources already allocated for this process
                     if(userqueue_three.get(l).isResourcesAllocated()==false){
                         // check if there is enough memory, printer, scanner, modem, cd even if 1 of them is not enough, process will not be run
@@ -387,6 +393,8 @@ public class Queue {
                             continue;
                         }
                     }
+                    Color.setColor(this.userqueue_three.get(l).color);
+                    PrintProcess(this.userqueue_three.get(l));
                     //Tüm prosesleri günceller.Süresini bir azaltır.
                     UpdateAllProcess(this.userqueue_three.get(l));
                     control = 1;
@@ -462,6 +470,77 @@ public class Queue {
                 this.processes.remove(i);
             }
         }
+    }
+
+    public void PrintProcess(Process process){
+        //Kontrol 0 ise print timea şu anki zamanı ata.
+        if(getControl()==0){
+            setPrint_time(getTime());
+        }
+        //Proses bilgilerini alır
+        int id = process.id;
+        int priority = process.priority;
+        int remain_time = process.remain_time;
+        String color = process.color;
+        //end
+        //is process expired?
+
+        // Kesme var mı?
+        if(this.prev_remain_time-1>0 && this.prev_id != id){
+            Color.setColor(getPrev_color());
+            System.out.println(getPrint_time()+" sn "+"proses askida (id:"+this.prev_id+" oncelik:"+(this.prev_priority+1)+" kalan sure:"+remain_time+")");
+            //Expired proses olarak ata.
+
+            //set expired process
+            setExpired_color(this.prev_color);
+
+            setExpired_id(this.prev_id);
+            setExpired_priority(this.prev_priority+1);
+            setExpired_remain_time(remain_time);
+            setExpired_time(getPrint_time());
+        }
+        // Proses başladı mı?
+        if(getControl_id()!= id){
+
+
+            Color.setColor(process.color);
+            System.out.println(getPrint_time()+" sn "+"proses basladi (id:"+id+" oncelik:"+priority+" kalan sure:"+remain_time+")");
+
+            setPrint_time(getPrint_time()+1);
+        }
+        //Proses devam ediyor.
+        if(getControl_id()==id){
+
+
+
+            Color.setColor(process.color);
+            System.out.println(getPrint_time()+" sn "+"proses yurutuluyor (id:"+id+" oncelik:"+priority+" kalan sure:"+remain_time+")");
+
+            setPrint_time(getPrint_time()+1);
+        }
+        //Proses zaman aşımı
+        if(getPrint_time()-getExpired_time()==21){
+            Color.setColor(getExpired_color());
+            System.out.println(getPrint_time()+" sn "+"proses zaman asimi (id:"+getExpired_id()+" oncelik:"+getExpired_priority()+" kalan sure:"+getExpired_remain_time()+")");
+
+            findAndDelete(getExpired_id(),getExpired_priority());
+        }
+        //Proses bitti.
+        if(remain_time-1 ==0){
+
+            Color.setColor(process.color);
+            System.out.println(getPrint_time()+" sn "+"proses sonlandi (id:"+id+" oncelik:"+priority+" kalan sure:"+(remain_time-1)+")" );
+
+
+        }
+
+        //Prosesi önceki proses yap.
+        setPrev_id(id);
+        setPrev_color(color);
+        setPrev_remain_time(remain_time);
+        setPrev_priority(priority);
+        setControl_id(id);
+        setControl(1);
     }
 
     //Böyle bir proses olup olmadığını tarar ve bool bir değer döndürür.
