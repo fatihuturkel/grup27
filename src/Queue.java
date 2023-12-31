@@ -196,20 +196,30 @@ public class Queue {
 
     	// if process is realtime and use memory more than 64, it will not be added to queue
         if(process.priority == 0 && process.memory_size > 64){
-            System.out.println("HATA - Gerçek-zamanlı proses 64MB'tan daha fazla bellek talep ediyor proses silindi."+""+"Process id: "+process.id);
             ProcessLogger processLogger = new ProcessLogger(process, "HATA - Gerçek-zamanlı proses 64MB'tan daha fazla bellek talep ediyor proses silindi.");
             return;
         }
+
+        // if process is realtime and use other resources, it will not be added to queue
+        if (process.priority == 0 && (process.printer > 0 || process.scanner > 0 || process.modem > 0 || process.cd > 0)){
+            ProcessLogger processLogger = new ProcessLogger(process, "HATA - Gerçek-zamanlı proses diğer kaynakları kullanamadığı için silindi.");
+            return;
+        }
+
+        // if process is user and use more than 2 printer, 1 scanner, 1 modem, 2 cd, it will not be added to queue
+        if(process.priority != 0 && (process.printer > 2 || process.scanner > 1 || process.modem > 1 || process.cd > 2)){
+            ProcessLogger processLogger = new ProcessLogger(process, "HATA - Proses çok fazla kaynak talep ediyor proses silindi.");
+            return;
+        }
+
         // if process is user and use memory more than 960, it will not be added to queue
-        else if(process.priority != 0 && process.memory_size > 960){
-            System.out.println("HATA - Kullanıcı prosesi 960MB'tan daha fazla bellek talep ediyor proses silindi."+""+"Process id: "+process.id);
+        if(process.priority != 0 && process.memory_size > 960){
             ProcessLogger processLogger = new ProcessLogger(process, "HATA - Kullanıcı prosesi 960MB'tan daha fazla bellek talep ediyor proses silindi.");
             return;
         }
-        else{
-            ProcessLogger processLogger = new ProcessLogger(process, null);
-            this.processes.add(process);
-        }
+
+        ProcessLogger processLogger = new ProcessLogger(process, null);
+        this.processes.add(process);
     }
 
     public void SplitQueue(){
