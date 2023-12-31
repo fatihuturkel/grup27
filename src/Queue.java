@@ -192,17 +192,24 @@ public class Queue {
 
     //Prosesler ArrayListine yeni proses ekler.
     public void AddProcessToJob(Process process){
+        // log process
+
     	// if process is realtime and use memory more than 64, it will not be added to queue
         if(process.priority == 0 && process.memory_size > 64){
             System.out.println("HATA - Gerçek-zamanlı proses 64MB'tan daha fazla bellek talep ediyor proses silindi."+""+"Process id: "+process.id);
+            ProcessLogger processLogger = new ProcessLogger(process, "HATA - Gerçek-zamanlı proses 64MB'tan daha fazla bellek talep ediyor proses silindi.");
             return;
         }
         // if process is user and use memory more than 960, it will not be added to queue
         else if(process.priority != 0 && process.memory_size > 960){
             System.out.println("HATA - Kullanıcı prosesi 960MB'tan daha fazla bellek talep ediyor proses silindi."+""+"Process id: "+process.id);
+            ProcessLogger processLogger = new ProcessLogger(process, "HATA - Kullanıcı prosesi 960MB'tan daha fazla bellek talep ediyor proses silindi.");
             return;
         }
-        else{this.processes.add(process);}
+        else{
+            ProcessLogger processLogger = new ProcessLogger(process, null);
+            this.processes.add(process);
+        }
     }
 
     public void SplitQueue(){
@@ -245,6 +252,12 @@ public class Queue {
                 if(realtimequeue.get(i).isResourcesAllocated()==false){
                     // check if there is a enough memory
                     if(remaningMemoryForRealTime >= realtimequeue.get(i).memory_size){
+                        //if realtime process require other resources, it will be deleted from queue
+                        if (realtimequeue.get(i).printer > 0 || realtimequeue.get(i).scanner > 0 || realtimequeue.get(i).modem > 0 || realtimequeue.get(i).cd > 0){
+                            // delete process from queue
+                            realtimequeue.remove(i);
+                            System.out.println("Realtime process diğer kaynakları kullanamadığı için silindi."+""+"Process id: "+realtimequeue.get(i).id);
+                        }
                         remaningMemoryForRealTime = remaningMemoryForRealTime - realtimequeue.get(i).memory_size;
                         realtimequeue.get(i).setResourcesAllocated(true);
                     }
